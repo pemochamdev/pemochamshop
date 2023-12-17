@@ -7,11 +7,16 @@ from django.urls import reverse
 class Category(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
-    description  = models.TextField()
-    image = models.ImageField(upload_to='photos/category')
+    description  = models.TextField(max_length=300 ,blank=True)
+    image = models.ImageField(upload_to='photos/categories', blank=True)
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
+
+
+    class Meta:
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
 
     def __str__(self):
         return self.name
