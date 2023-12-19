@@ -5,6 +5,6 @@ from category.models import Category
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description', 'date_created')
+    list_display = ('id', 'name', 'date_created')
     prepopulated_fields = {"slug": ("name",)}
 

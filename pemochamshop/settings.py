@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Local app
-    'shop',
+    'store',
     'category',
     'accounts',
 ]
