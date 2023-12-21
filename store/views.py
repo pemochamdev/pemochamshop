@@ -36,3 +36,19 @@ def store(request, category_slug=None):
     }
 
     return render(request, 'store.html', context)
+
+
+def product_detail_views(request, product_slug, category_slug=None):
+
+    try:
+        single_product = Product.objects.get(slug=product_slug, category__slug=category_slug)
+        
+    except Exception as e:
+        raise e
+    
+    context = {
+        'single_product':single_product,
+      
+    }
+
+    return render(request, 'product_detail.html', context)
