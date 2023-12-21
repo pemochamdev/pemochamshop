@@ -6,12 +6,12 @@ from store.models import Product
 
 class Cart(models.Model):
     
-    cart_id = models.CharField(max_length=200, unique=True)
+    cart_id = models.CharField(max_length=200, unique=True, editable=False)
     date_add = models.DateTimeField(auto_now_add=True)
 
 
     def __str__(self):
-        return str(self.uuid)
+        return str(self.cart_id)
 
 
 class CartItem(models.Model):
