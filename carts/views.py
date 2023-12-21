@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 from store.models import Product
@@ -41,11 +41,22 @@ def add_cart(request, product_id):
 
 
 
-def cart(request):
-    
+def cart(request, quantity=0, cart_items=None,total=0):
+    try:
+        cart = Cart.object.get(cart_id=_cart_id(request))
+        cart_items = CartItem.objects.filter(cart=cart)
+        for cart_item in cart_items:
+            total +=(cart_item.product.price*cart_item.quantity)
+            quantity += cart_item.quantity
+    except ObjectDoesNotExist :
+        pass
+
+
     template_name = 'cart.html'
     context = {
-
+        'cart_items':cart_items,
+        'total':total,
+        'quantity':quantity,
     }
 
     return render(request, template_name, context)
