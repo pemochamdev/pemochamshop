@@ -4,6 +4,8 @@ from django.shortcuts import render, get_object_or_404
 
 from store.models import Product
 from category.models import Category
+from carts.models import Cart, CartItem
+from carts.views import _cart_id
 
 def home(request):
     products = Product.objects.filter(is_available=True).order_by('-created_at')
@@ -42,12 +44,14 @@ def product_detail_views(request, product_slug, category_slug=None):
 
     try:
         single_product = Product.objects.get(slug=product_slug, category__slug=category_slug)
+        in_cart = CartItem.objects.filter(cart__cart_id=_cart_id(request), product=single_product).exists()
         
     except Exception as e:
         raise e
     
     context = {
         'single_product':single_product,
+        'in_cart':in_cart,
       
     }
 
