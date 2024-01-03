@@ -16,6 +16,7 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product')
+    variations = models.ManyToManyField('Variation',blank=True)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart')
     quantity = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
@@ -27,11 +28,20 @@ class CartItem(models.Model):
         return self.product.price*self.quantity
 
 
+class VariationManager(models.Manager):
+    def colors(self):
+        return super(VariationManager, self).filter(variation_category='color', is_active=True)
+
+
+    def sizes(self):
+        return super(VariationManager, self).filter(variation_category='size', is_active=True)
+
+
+variation_category_choices =(
+    ('color', 'color'),
+    ('size', 'size'),
+)
 class Variation(models.Model):
-    variation_category_choices =(
-        ('color', 'color'),
-        ('size', 'size'),
-    )
     # variation_value_choices = (
     #     ()
     # )
@@ -41,6 +51,10 @@ class Variation(models.Model):
     is_active = models.BooleanField(default=True)
     created_date = models.DateTimeField(auto_now = True)
 
+    objects = VariationManager()
+    
+    
     def __str__(self):
-        return self.product.name
+        return self.variation_value
+    
     
