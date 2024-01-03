@@ -25,4 +25,22 @@ class CartItem(models.Model):
 
     def sub_total(self):
         return self.product.price*self.quantity
+
+
+class Variation(models.Model):
+    variation_category_choices =(
+        ('color', 'color'),
+        ('size', 'size'),
+    )
+    # variation_value_choices = (
+    #     ()
+    # )
+    product = models.ForeignKey(Product, on_delete = models.CASCADE)
+    variation_category = models.CharField(max_length=200, choices = variation_category_choices)
+    variation_value = models.CharField(max_length=200)#, choices = variation_value_choices
+    is_active = models.BooleanField(default=True)
+    created_date = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.product.name
     
