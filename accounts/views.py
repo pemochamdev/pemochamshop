@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import logout
+from django.contrib.auth import logout, authenticate, login
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
-from accounts.forms import AccountRegistrationForm
+from accounts.forms import AccountRegistrationForm, SigninForm
 from accounts.models import Account
 
 
@@ -59,17 +60,37 @@ def signin(request):
     
     user = request.user
     
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        user = authenticate(
+            email = email,
+            password = password
+        )
+
+        if user is not None:
+            login(request, user)
+            #messages.success(request, "Your Are Now Logged In !!!")
+            return redirect('home')
+        else:
+            messages.warning(request, 'Invalid Login CredentIals')
+            return redirect('signin')
+        
     
     template_name = 'signin.html'
     context = {
-
+        #'form':form,
     }
     return render(request, template_name, context)
 
 
-
+@login_required(login_url='signin')
 def logout_views(request):
     
     logout(request)
-    return redirect('home')
+
+    messages.success(request, 'Wow, You Are logged Out')
+
+    return redirect('signin')
 

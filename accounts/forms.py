@@ -7,11 +7,11 @@ from accounts.models import Account
 class AccountRegistrationForm(forms.ModelForm):
 
     password = forms.CharField(widget=forms.PasswordInput(attrs={
-        'placeholder':'Enter your password here',
+        #'placeholder':'Enter your password here',
         #'class':'form-control'
     }))
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={
-        'placeholder':'Repeat your same password here',
+        #'placeholder':'Repeat your same password here',
         #'class':'form-control'
     }))
     
@@ -44,4 +44,31 @@ class AccountRegistrationForm(forms.ModelForm):
             self.fields[field].widget.attrs['class'] = 'form-control'
     
 
-  
+
+class SigninForm(forms.ModelForm):
+
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        
+    }))
+
+    class Meta:
+        model = Account
+        fields = ('email', 'password')
+    
+
+    def clean(self) :
+        cleaned_data = super(SigninForm, self).clean()
+
+        password = cleaned_data.get('password')
+
+        return super().clean()
+    
+
+    def __init__(self, *args, **kwargs):
+        super(SigninForm, self).__init__(*args, **kwargs)
+
+        self.fields['password'].widget.attrs['placeholder'] = 'Enter Your First Name'
+        self.fields['email'].widget.attrs['placeholder'] = 'Enter Your Email'
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'
+    

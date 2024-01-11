@@ -104,14 +104,17 @@ $(document).ready(function() {
         <div class="col-lg-3 col-sm-6 col-8 order-2 order-lg-3">
                     <div class="d-flex justify-content-end mb-3 mb-lg-0">
                         <div class="widget-header">
-                            <small class="title text-muted">Welcome guest!</small>
                             <div> 
                                 {% if request.user.is_authenticated %}
                                 
-                                <a href=" {% url "logout" %} "> Login</a>
+                                <small class="title text-muted">Welcome {{request.user.username}}</small>
+                                
+                                <a href=" # "> Dashboard</a> <span class="dark-transp"> | </span>
+                                <a href=" {% url "logout" %}  "> Logout</a>
                                 
                                 {% else %}
-
+                                
+                                <small class="title text-muted">Welcome guest!</small>
                                 <a href=" {% url "signin" %} ">Sign in</a> <span class="dark-transp"> | </span>
                                 <a href=" {% url "register" %} "> Register</a>
 
