@@ -41,7 +41,8 @@ def register(request):
                 )
                 new_user.phone_numbre = phone_numbre
                 new_user.save()
-                return redirect('signin')
+                messages.info(request, "Registration Successful !!!")
+                return redirect('register')
                 
     else:
 

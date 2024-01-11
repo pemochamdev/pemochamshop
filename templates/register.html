@@ -11,16 +11,10 @@
 	<!-- ============================ COMPONENT REGISTER   ================================= -->
 		<div class="card mx-auto" style="max-width:520px; margin-top:40px;">
 		  <article class="card-body">
+			  {% include "alerts.html" %}
 			<header class="mb-4"><h4 class="card-title">Sign up</h4></header>
 			<form method="post" action="">
 				{% csrf_token %}
-				{% if messages %}
-						<ul class="messages">
-							{% for message in messages %}
-							<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-							{% endfor %}
-						</ul>
-					{% endif %}
 					<div class="form-row">
 						<div class="col form-group">
 							<label>First name</label>
