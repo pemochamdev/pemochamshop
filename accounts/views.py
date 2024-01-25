@@ -101,8 +101,8 @@ def signin(request):
 
         if user is not None:
             login(request, user)
-            #messages.success(request, "Your Are Now Logged In !!!")
-            return redirect('home')
+            messages.success(request, "Your Are Now Logged In !!!")
+            return redirect('profile')
         else:
             messages.warning(request, 'Invalid Login CredentIals')
             return redirect('signin')
@@ -141,3 +141,52 @@ def activate(request, uidb64, token):
     else:
         messages.error(request, "Invalid activation link")
         return redirect('register')
+
+
+@login_required(login_url = 'login')
+def dashboard(request):
+
+    context = {}
+    return render(request, 'dashboard.html', context)
+
+
+
+def forgotpassword(request):
+
+    if request.method == 'POST':
+        email = request.POST['email']
+
+        if Account.objects.filter(email = email).exists():
+            user = Account.objects.get(email__exact = email)
+            
+            
+            # RESET PASSWORD EMAIL
+            current_site = get_current_site(request)
+            mail_subject = "RESET YOUR PASSWORD"
+            message = render_to_string('reset_password_email.html', {
+                'new_user': user,
+                'domain': current_site,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user)
+            })
+
+            to_email = email
+            send_email = EmailMessage(mail_subject, message, to = [to_email],connection=None)
+            send_email.send()
+
+
+            messages.success(request, "Password reset email has been send to your email address")
+            return redirect('signin')
+                
+
+        else:
+            messages.error(request, 'ACCOUNT DOES NOT EXIST')
+            return redirect('forgotpassword')
+    
+
+    context = {}
+    return render(request, 'forgot_password.html', context)
+
+
+def resetpassword_validate(request):
+    return HttpResponse("resetpassword_validate")
