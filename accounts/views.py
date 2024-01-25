@@ -68,11 +68,6 @@ def register(request):
                 send_email = EmailMessage(mail_subject, message, to = [to_email],connection=None)
                 send_email.send()
 
-
-                #messages.info(request, "Registration Successful !!!")
-                #messages.success(request, "Thank you for registering with us.We have sent you a 
-                #verification email to your email address [mohamedpempeme7@gmail.com]. 
-                #Please verify it.")
                 return redirect('/accounts/signin/?command=verification&email='+email)
                 
     else:
@@ -110,7 +105,7 @@ def signin(request):
     
     template_name = 'signin.html'
     context = {
-        #'form':form,
+        'user':user,
     }
     return render(request, template_name, context)
 
@@ -188,5 +183,44 @@ def forgotpassword(request):
     return render(request, 'forgot_password.html', context)
 
 
-def resetpassword_validate(request):
-    return HttpResponse("resetpassword_validate")
+def resetpassword_validate(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = Account._default_manager.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, Account.DoesNotExist):
+        user = None
+    
+    if user is not None and default_token_generator.check_token(user, token):
+        request.session['uid'] = uid
+        user.save()
+        messages.success(request, "Please reset your pasword !")
+        return redirect('resetpassword')
+    else:
+        messages.error(request, "This link  has been expired")
+        return redirect('signin')
+
+
+def resetpassword(request):
+
+    template_names = 'resetpassword.html'
+
+    if request.method == 'POST':
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+
+        if password == confirm_password:
+            uid = request.session.get('uid')
+            user = Account.objects.get(pk=uid)
+            user.set_password(password)
+            user.save()
+            messages.success(request, 'Password Reset Successful')
+            return redirect('signin')
+
+        else:
+            messages.error(request, "Passwod does not match")
+            return redirect('resetpassword')
+    else:
+
+
+        return render(request,template_names)
+    
