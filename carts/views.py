@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 from store.models import Product
@@ -111,6 +112,8 @@ def _cart_id(request):
 #     return redirect('cart')
 
 
+
+#@login_required(login_url='signin')
 def add_cart(request, product_id):
   product = Product.objects.get(id=product_id)#get product
   product_variation = []
@@ -184,8 +187,9 @@ def add_cart(request, product_id):
 
 
 
+@login_required(login_url='signin')
 def remove_cart(request,product_id, cart_item_id):
-    cart = Cart.objects.get(cart_id=_cart_id(request))
+    cart = Cart.objects.get(cart_id = _cart_id(request))
     product = get_object_or_404(Product, id=product_id)
     try:
         cart_item = get_object_or_404(CartItem, product=product, cart=cart, id=cart_item_id)
@@ -200,6 +204,7 @@ def remove_cart(request,product_id, cart_item_id):
     return redirect('cart')
 
 
+@login_required(login_url='signin')
 def remove_cart_item(request,product_id, cart_item_id):
     cart = Cart.objects.get(cart_id=_cart_id(request))
     product = get_object_or_404(Product, id=product_id)
@@ -213,26 +218,59 @@ def remove_cart_item(request,product_id, cart_item_id):
 
 
 
-
+@login_required(login_url='signin')
 def cart(request, quantity=0, cart_items=None,total=0):
-    try:
-        cart = Cart.objects.get(cart_id=_cart_id(request))
-        cart_items = CartItem.objects.filter(cart=cart)
-        for cart_item in cart_items:
-            total +=(cart_item.product.price*cart_item.quantity)
-            quantity += cart_item.quantity
-        tax = (2 * total)/100
-        grand_total = tax + total
-    except ObjectDoesNotExist :
-        pass
+  
+  
+  try:
+    tax = 0
+    grand_total = 0
+    cart = Cart.objects.get(cart_id=_cart_id(request))
+    cart_items = CartItem.objects.filter(cart=cart)
+    for cart_item in cart_items:
+        total +=(cart_item.product.price*cart_item.quantity)
+        quantity += cart_item.quantity
+    tax = (2 * total)/100
+    grand_total = tax + total
+  except ObjectDoesNotExist :
+    pass
 
 
-    template_name = 'cart.html'
-    context = {
+  template_name = 'cart.html'  
+  context = {
         'cart_items':cart_items,
         'total':total,
         'quantity':quantity,
         'tax':tax,
         'grand_total':grand_total,
     }
-    return render(request, template_name, context)
+  return render(request, template_name, context)
+
+
+
+@login_required(login_url='signin')
+def checkout(request,  quantity=0, cart_items=None,total=0):
+
+  try:
+    tax = 0
+    grand_total = 0
+    cart = Cart.objects.get(cart_id=_cart_id(request))
+    cart_items = CartItem.objects.filter(cart=cart)
+    for cart_item in cart_items:
+        total +=(cart_item.product.price*cart_item.quantity)
+        quantity += cart_item.quantity
+    tax = (2 * total)/100
+    grand_total = tax + total
+  except ObjectDoesNotExist :
+    pass
+
+
+  context = {
+    'cart_items':cart_items,
+    'total':total,
+    'quantity':quantity,
+    'tax':tax,
+    'grand_total':grand_total,
+    }
+   
+  return render(request, 'checkout.html', context)

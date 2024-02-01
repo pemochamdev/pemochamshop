@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 import uuid
 from store.models import Product
+from accounts.models import Account
 
 class Cart(models.Model):
     
@@ -15,9 +16,11 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
+    
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='user', null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product')
     variations = models.ManyToManyField('Variation',blank=True)
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart')
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart', null=True)
     quantity = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
 

@@ -16,7 +16,8 @@ from django.contrib.auth.tokens import default_token_generator
 
 from accounts.forms import AccountRegistrationForm
 from accounts.models import Account
-
+from carts.models import Cart, CartItem
+from carts.views import _cart_id
 
 # Create your views here.
 
@@ -83,18 +84,30 @@ def register(request):
 
 def signin(request):
     
-    user = request.user
-    
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-
         user = authenticate(
             email = email,
             password = password
         )
 
+
         if user is not None:
+            try:
+                cart = Cart.objects.get(cart_id=_cart_id(request))
+                is_cart_item_exists = CartItem.objects.filter(cart=cart).exists()
+
+                if is_cart_item_exists:
+                    cart_item = CartItem.objects.filter(cart=cart)
+                    print(cart_item)
+                    for item in cart_item:
+                        item.user = user
+                        print('user', item.user)
+                        item.save()
+
+            except:
+                pass
             login(request, user)
             messages.success(request, "Your Are Now Logged In !!!")
             return redirect('profile')
@@ -105,7 +118,7 @@ def signin(request):
     
     template_name = 'signin.html'
     context = {
-        'user':user,
+        #'user':user,
     }
     return render(request, template_name, context)
 
