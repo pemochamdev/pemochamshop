@@ -1,2 +1,2 @@
 git add .
-git commit -m"Assign the User to the Cart Item"
+git commit -m"Modify Cart Counter & Cart View to Handle Logged in Users"
