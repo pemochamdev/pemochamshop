@@ -100,11 +100,41 @@ def signin(request):
 
                 if is_cart_item_exists:
                     cart_item = CartItem.objects.filter(cart=cart)
-                    print(cart_item)
+                    
+                    # Getting the product variation by cart id
+                    product_variation = []
                     for item in cart_item:
-                        item.user = user
-                        print('user', item.user)
-                        item.save()
+                        variations = item.variations.all()
+                        product_variation.append(list(variations))
+                 
+                    # Get Cart Item from user to access is product variation
+                    cart_item = CartItem.objects.filter(user=user)
+                    ex_var_list = []
+                    id = []
+                    
+                    #IF THE CURRENT VARIATION IS INSIDE THE EXISTING VARIATION increase qty of the item
+                    
+                    for item in cart_item:
+                        existing_variation = item.variations.all()
+                        ex_var_list.append(list(existing_variation))
+                        id.append(item.id)
+                    
+                    for prd_variation in product_variation:
+                        if prd_variation in ex_var_list:
+                            index = ex_var_list.index(prd_variation)
+                            item_id = id[index]
+                            item = CartItem.objects.get(id=item_id)
+                            item.quantity += 1
+                            item.user = user
+                            item.save()
+                        else:
+                            item = CartItem.objects.create(cart=cart)
+                            for item in cart_item:
+                                item.user = user
+                        
+                                item.save()
+                    
+
 
             except:
                 pass

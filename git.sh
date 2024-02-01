@@ -1,2 +1,2 @@
 git add .
-git commit -m"Modify Cart Counter & Cart View to Handle Logged in Users"
+git commit -m"Variation Grouping for Logged in Users"
