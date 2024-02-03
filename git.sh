@@ -1,2 +1,2 @@
 git add .
-git commit -m"Dynamically Redirect the User to Next Page"
+git commit -m"copy rigth"
