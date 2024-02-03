@@ -67,18 +67,22 @@ def place_order(request, quantity=0, total=0):
             data.save()
             print('last save -> ', data)
 
-            return redirect('checkout')
+            order = Orders.objects.get(user=user_current, is_ordered = False, order_number=order_number)
+            context = {
+                'order': order,
+                'cart_items': cart_items,
+                'tax':tax,
+                'total':total, 
+                'grand_total': grand_total,
+
+            }   
+
+            template_name = 'payments.html'
+            return render(request, template_name, context)
         else:
             return redirect("checkout")
         
 
-
-
-    template_name = 'place-order.html'
-    context = {
-
-    }
-    return render(request, context)
 
 
 def payments(request):

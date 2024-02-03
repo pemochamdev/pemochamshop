@@ -11,6 +11,7 @@
 	<!-- ============================ COMPONENT 1 ================================= -->
 
 
+    <h4 class="text-center mb-10"> Review your order and Make Payment</h4>
 	<div class="row">
 		<aside class="col-lg-8">
             <div class="card">
@@ -54,7 +55,7 @@
                             <tr>
                                 <td>
                                     <figure class="itemside align-items-center">
-                                        <div class="aside"><img src="{{ cart_item.product.images.url }}" class="img-sm"></div>
+                                        <div class="aside"><img src="{{ cart_item.product.image.url }}" class="img-sm"></div>
                                         <figcaption class="info">
                                             <a href="{{ cart_item.product.get_url }}" class="title text-dark">{{ cart_item.product.product_name }}</a>
                                             <p class="text-muted small">
