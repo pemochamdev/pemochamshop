@@ -173,6 +173,7 @@ def add_cart(request, product_id):
       else:
         #create new cart item
         item = CartItem.objects.create(product=product, quantity=1, user=current_user)
+      
         # add variation in the cart item
         if len(product_variation) > 0:
           item.variations.clear()
@@ -270,16 +271,22 @@ def add_cart(request, product_id):
 
 @login_required(login_url='signin')
 def remove_cart(request,product_id, cart_item_id):
-    cart = Cart.objects.get(cart_id = _cart_id(request))
+    #cart = Cart.objects.get(cart_id = _cart_id(request))
     product = get_object_or_404(Product, id=product_id)
     try:
+      if request.user.is_authenticated:
+        
+        cart_item = get_object_or_404(CartItem, product=product, user=request.user, id=cart_item_id)
+      else:
+        cart = Cart.objects.get(cart_id = _cart_id(request))
         cart_item = get_object_or_404(CartItem, product=product, cart=cart, id=cart_item_id)
-        if cart_item.quantity >1:
 
-            cart_item.quantity -= 1
-            cart_item.save()
-        else:
-            cart_item.delete()
+      if cart_item.quantity >1:
+
+        cart_item.quantity -= 1
+        cart_item.save()
+      else:
+        cart_item.delete()
     except:
         pass
     return redirect('cart')
@@ -287,12 +294,18 @@ def remove_cart(request,product_id, cart_item_id):
 
 @login_required(login_url='signin')
 def remove_cart_item(request,product_id, cart_item_id):
-    cart = Cart.objects.get(cart_id=_cart_id(request))
+    #cart = Cart.objects.get(cart_id=_cart_id(request))
     product = get_object_or_404(Product, id=product_id)
     try:
+        if request.user.is_authenticated:
+
        
-        cart_item = get_object_or_404(CartItem, product=product, cart=cart, id=cart_item_id)
+          cart_item = get_object_or_404(CartItem, product=product, user=request.user, id=cart_item_id)
+        else:
+          cart = Cart.objects.get(cart_id=_cart_id(request))
+          cart_item = get_object_or_404(CartItem, product=product, cart=cart, id=cart_item_id)
         cart_item.delete()
+        
     except:
        pass
     return redirect('cart')

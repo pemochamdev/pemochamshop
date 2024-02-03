@@ -1,2 +1,2 @@
 git add .
-git commit -m"Variation Grouping for Logged in Users"
+git commit -m"Fix Remove & Cart Decrement Functions"
