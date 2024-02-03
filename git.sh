@@ -1,2 +1,2 @@
 git add .
-git commit -m"Fix Remove & Cart Decrement Functions"
+git commit -m"Dynamically Redirect the User to Next Page"

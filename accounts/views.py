@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
 from django.http import HttpResponse
 
+# Request
+import requests
+
 
 # VERIFICATION EMAIL
 
@@ -140,7 +143,18 @@ def signin(request):
                 pass
             login(request, user)
             messages.success(request, "Your Are Now Logged In !!!")
-            return redirect('profile')
+            url = request.META.get("HTTP_REFERER")
+            try:
+                query = requests.utils.urlparse(url).query
+                print('query --> ', query)
+                params = dict(x.split("=") for x in query.split("&"))
+                print('params --> ', params)
+                if 'next' in params:
+                    nextPage = params['next']
+                    return redirect(nextPage)
+            except:
+                return redirect('profile')
+                
         else:
             messages.warning(request, 'Invalid Login CredentIals')
             return redirect('signin')
