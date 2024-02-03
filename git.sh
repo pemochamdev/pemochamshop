@@ -1,2 +1,2 @@
 git add .
-git commit -m"Place Order View and Generate Order Number"
+git commit -m"Review Order Page Setup"

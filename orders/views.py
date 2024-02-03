@@ -79,3 +79,13 @@ def place_order(request, quantity=0, total=0):
 
     }
     return render(request, context)
+
+
+def payments(request):
+    
+
+    template_name = 'payments.html'
+    context = {
+
+    }
+    return render(request, template_name, context)
