@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from store.models import Product
+from store.models import Product, ReviewRating
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -11,3 +11,6 @@ class ProductAdmin(admin.ModelAdmin):
     list_display_links = ['name']
 
 
+@admin.register(ReviewRating)
+class ReviewRatingAdmin(admin.ModelAdmin):
+    list_display = ('product', 'subject','review', 'rating', 'created_at', 'updated_at')

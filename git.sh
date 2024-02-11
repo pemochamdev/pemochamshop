@@ -1,2 +1,2 @@
 git add .
-git commit -m"Review Order Payment Page"
+git commit -m"Store the Rating & Reviews"
