@@ -1,2 +1,2 @@
 git add .
-git commit -m"Store the Rating & Reviews"
+git commit -m"Check if the User has purchased the Product before submitting Review"

@@ -9,6 +9,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from carts.views import _cart_id
 from category.models import Category
 from carts.models import Cart, CartItem
+from orders.models import OrderProduct
 from store.forms import ReviewRatingForm
 from store.models import Product, ReviewRating
 
@@ -62,10 +63,17 @@ def product_detail_views(request, product_slug, category_slug=None):
     except Exception as e:
         raise e
     
+    try:
+        orderproduct = OrderProduct.objects.filter(user=request.user, product_id = single_product.id).exists()
+
+    except OrderProduct.DoesNotExist:
+        orderproduct = None
+
+    
     context = {
         'single_product':single_product,
         'in_cart':in_cart,
-      
+        'orderproduct':orderproduct,
     }
 
     return render(request, 'product_detail.html', context)
