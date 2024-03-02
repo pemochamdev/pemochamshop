@@ -69,11 +69,15 @@ def product_detail_views(request, product_slug, category_slug=None):
     except OrderProduct.DoesNotExist:
         orderproduct = None
 
-    
+    # Get the reviews
+    reviews = ReviewRating.objects.filter(product_id = single_product.id, status=True)
+
+
     context = {
         'single_product':single_product,
         'in_cart':in_cart,
         'orderproduct':orderproduct,
+        'reviews':reviews,
     }
 
     return render(request, 'product_detail.html', context)
