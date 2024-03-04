@@ -62,12 +62,15 @@ def product_detail_views(request, product_slug, category_slug=None):
         
     except Exception as e:
         raise e
-    
-    try:
-        orderproduct = OrderProduct.objects.filter(user=request.user, product_id = single_product.id).exists()
+    if request.user.is_authenticated:
 
-    except OrderProduct.DoesNotExist:
-        orderproduct = None
+        try:
+            orderproduct = OrderProduct.objects.filter(user=request.user, product_id = single_product.id).exists()
+
+        except OrderProduct.DoesNotExist:
+            orderproduct = None
+    else:
+        orderproduct = OrderProduct.objects.filter(product_id = single_product.id).exists()
 
     # Get the reviews
     reviews = ReviewRating.objects.filter(product_id = single_product.id, status=True)
@@ -125,3 +128,4 @@ def submit_review(request, product_id):
                 data.save()
                 messages.success(request, 'Thank you! Your review has been submitted.')
                 return redirect(url)
+

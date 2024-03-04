@@ -13,4 +13,4 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(ReviewRating)
 class ReviewRatingAdmin(admin.ModelAdmin):
-    list_display = ('product', 'subject','review', 'rating', 'created_at', 'updated_at')
+    list_display = ('product', 'subject', 'rating', 'created_at', 'updated_at')

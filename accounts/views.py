@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
 from django.http import HttpResponse
 
+#Other import
+from orders.models import Orders
+
 # Request
 import requests
 
@@ -198,9 +201,14 @@ def activate(request, uidb64, token):
 @login_required(login_url = 'login')
 def dashboard(request):
 
-    context = {}
-    return render(request, 'dashboard.html', context)
+    orders = Orders.objects.filter(user_id = request.user.id, is_ordered = True).order_by('created_at')
+    orders_count = orders.count()
 
+    context = {
+        'orders':orders,
+        'orders_count':orders_count
+    }
+    return render(request, 'dashboard.html', context)
 
 
 def forgotpassword(request):
@@ -280,4 +288,16 @@ def resetpassword(request):
 
 
         return render(request,template_names)
+
+
+
+def my_orders(request):
+    user = request.user
+    orders = Orders.objects.filter(user=user, is_ordered=True).order_by('-created_at')
     
+
+    context = {
+        'orders':orders,
+    }
+
+    return render(request, 'my_orders.html', context)

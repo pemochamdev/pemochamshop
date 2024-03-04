@@ -1,2 +1,2 @@
 git add .
-git commit -m"Displaying Rating Stars"
+git commit -m"Dashboard, my orders, userProfile model and others"

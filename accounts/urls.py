@@ -3,8 +3,9 @@ from django.urls import path
 from accounts import views
 
 urlpatterns = [
-    path(" ", views.dashboard, name='profile'),
-    path("profile/", views.dashboard, name='profile'),        
+    path("", views.dashboard, name='profile'),
+    path("profile/", views.dashboard, name='profile'),  
+    path('my_orders/', views.my_orders, name='my_orders'),      
 
     path("register/", views.register, name='register'),
     path("signin/", views.signin, name='signin'),
