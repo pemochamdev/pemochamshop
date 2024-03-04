@@ -1,8 +1,8 @@
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 
 #Other import
 from orders.models import Orders
@@ -16,14 +16,14 @@ import requests
 from django.core.mail import EmailMessage
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
-from accounts.forms import AccountRegistrationForm
-from accounts.models import Account
-from carts.models import Cart, CartItem
 from carts.views import _cart_id
+from carts.models import Cart, CartItem
+from accounts.models import Account, UserProfile
+from accounts.forms import AccountRegistrationForm, UserForm, UserProfileForm
 
 # Create your views here.
 
@@ -301,3 +301,29 @@ def my_orders(request):
     }
 
     return render(request, 'my_orders.html', context)
+
+
+@login_required(login_url='login')
+def edit_profile(request):
+    user = request.user
+    userprofile = get_object_or_404(UserProfile, user=user)
+
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance = user)
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=userprofile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Your profile has been updated.')
+            return redirect('edit_profile')
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = UserProfileForm(instance=userprofile)
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'userprofile': userprofile,
+    }
+
+    return render(request, 'edit_profile.html', context)
