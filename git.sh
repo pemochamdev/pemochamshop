@@ -1,2 +1,2 @@
 git add .
-git commit -m"Edit Profile"
+git commit -m"Change password"
