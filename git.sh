@@ -1,2 +1,2 @@
 git add .
-git commit -m"Change password"
+git commit -m"Order Detail Page"

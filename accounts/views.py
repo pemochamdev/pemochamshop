@@ -5,7 +5,7 @@ from django.contrib.auth import logout, authenticate, login
 from django.shortcuts import render, redirect, get_object_or_404
 
 #Other import
-from orders.models import Orders
+from orders.models import Orders,OrderProduct
 
 # Request
 import requests
@@ -360,3 +360,19 @@ def change_password(request):
             return redirect('change_password')
     return render(request, 'change_password.html')
 
+def order_detail(request,order_id):
+    order_details = OrderProduct.objects.filter(order__order_number=order_id)
+    order = Orders.objects.get(order_number = order_id)
+
+    subtotal = 0
+    for i in order_details:
+        subtotal += i.product_price * i.quantity
+
+    context = {
+        'order_detail':order_details,
+        'order':order,
+        'subtotal':subtotal,
+
+    }
+    return render(request, 'order_detail.html', context)
+    
