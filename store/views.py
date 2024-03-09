@@ -11,7 +11,7 @@ from category.models import Category
 from carts.models import Cart, CartItem
 from orders.models import OrderProduct
 from store.forms import ReviewRatingForm
-from store.models import Product, ReviewRating
+from store.models import Product, ReviewRating,ProductGallery
 
 
 def home(request):
@@ -76,11 +76,15 @@ def product_detail_views(request, product_slug, category_slug=None):
     reviews = ReviewRating.objects.filter(product_id = single_product.id, status=True)
 
 
+    # Get Product gallery
+    product_gallery = ProductGallery.objects.filter(product_id=single_product.id)
+
     context = {
         'single_product':single_product,
         'in_cart':in_cart,
         'orderproduct':orderproduct,
         'reviews':reviews,
+        'product_gallery':product_gallery,
     }
 
     return render(request, 'product_detail.html', context)

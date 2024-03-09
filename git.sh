@@ -1,2 +1,2 @@
 git add .
-git commit -m"Fix Profile Picture in Dashboard"
+git commit -m"Product Gallery Implementation"
