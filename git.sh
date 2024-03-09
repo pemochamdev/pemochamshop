@@ -1,2 +1,2 @@
 git add .
-git commit -m"Order Detail Page"
+git commit -m"Fix Profile Picture in Dashboard"
