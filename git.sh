@@ -1,2 +1,2 @@
 git add .
-git commit -m"Fix methode AverageRating and Show Rating Stars on Home Page"
+git commit -m"Product Gallery Implementation – Unlimited Product Images"
